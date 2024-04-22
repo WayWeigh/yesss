@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- **** Background Circles Start **** -->
+    <div class="bg-circles">
+        <div class="circle-1"></div>
+        <div class="circle-2"></div>
+        <div class="circle-3"></div>
+        <div class="circle-4"></div>
+    </div>
+
+    <!-- **** Login Page **** -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- **** List Container Start Here **** -->
+
+    <div class="container" style="display:none;">
+        <div class="todo-app">
+            <h2><img src="images/list1.png" alt="">To-Do List </h2>
+            <div class="row">
+                <input type="text" id="input-box" placeholder="Add your task ...">
+                <button onclick="addTask()" id="add">Add</button>
+            </div>
+            <ul id="list-container">
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // JavaScript for handling login form submission and showing/hiding containers
+        const loginForm = document.getElementById('login-form');
+        const loginContainer = document.querySelector('.login-container');
+        const todoContainer = document.querySelector('.container');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data.message);
+                console.log(data.user); // This contains the user's data including todos
+                loginContainer.style.display = 'none'; // Hide login container
+                todoContainer.style.display = 'block'; // Show todo container
+            } else {
+                console.error(data.message);
+            }
+        });
+    </script>
+</body>
+</html>
